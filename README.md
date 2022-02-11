@@ -1,4 +1,4 @@
-# smartplantdashboard
+# SmartPlant_Dashboard
 
 ## Project setup
 ```
