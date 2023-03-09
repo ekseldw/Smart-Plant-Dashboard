@@ -44,8 +44,8 @@
     >
 
     </div>
-
-    <div
+    <!--새로추가-->
+    <div v-if ="isConnected"
       style="  
         width: 260px;
         display: flex;
@@ -53,7 +53,7 @@
         flex-flow: column wrap-reverse;
         justify-content: flex-start;
       "
-    >
+    ><!---->
       <component
         v-for="sensor in ssInfoList"
         :key="sensor.ssId"
@@ -63,14 +63,14 @@
         :sensor="sensor"
       >
       </component>
-      <NewChart></NewChart>
+      <!-- <NewChart></NewChart> -->
     </div>
     </div>
     <div style="display: flex; flex-direction: column">
-      <gas-chart v-if="false" :gas="90"></gas-chart>
-      <dust-chart v-if="false"></dust-chart>
-      <temp-chart v-if="false" :temp="temp"></temp-chart>
-      <humidity-chart v-if="false" :humidity="humidity"></humidity-chart>
+      <GasChart v-if="false" :gas="90"></GasChart>
+      <DustChart v-if="false"></DustChart>
+      <TempChart v-if="false" :temp="temp"></TempChart>
+      <HumidityChart v-if="false" :humidity="humidity"></HumidityChart>
     </div>
 
     <AlertWarningModal
@@ -83,6 +83,7 @@
     :fireWarningInfo="fireWarningInfo"
     @close-fire-detection-modal="fireWarning=false [fireDetection()]"
     ></FireDetectionModal>
+    
   </div>
 </template>
 
@@ -91,16 +92,16 @@
 import axios from "axios";
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
-import ShowCCTV from "@/components/Charts/show-cctv.vue";
+import ShowCCTV from "@/components/Dashboard/IntelligentDetection/Charts/show-cctv.vue";
 //import MultiChart from "@/components/Charts/multi-chart.vue";
-import GasChart from "@/components/Charts/gas-chart.vue";
-import DustChart from "@/components/Charts/dust-chart.vue";
-import TempChart from "@/components/Charts/temp-chart.vue";
-import HumidityChart from "@/components/Charts/humidity-chart.vue";
-import AlarmLog from "../components/Charts/AlarmLog.vue";
-import AlertWarningModal from "./AlertWarningModal.vue";
-import NewChart from "@/components/Charts/NewChart.vue";
-import FireDetectionModal from "../components/AbnormalDetection/FireDetectionModal.vue";
+import GasChart from "@/components/Dashboard/IntelligentDetection/Charts/gas-chart.vue";
+import DustChart from "@/components/Dashboard/IntelligentDetection/Charts/dust-chart.vue";
+import TempChart from "@/components/Dashboard/IntelligentDetection/Charts/temp-chart.vue";
+import HumidityChart from "@/components/Dashboard/IntelligentDetection/Charts/humidity-chart.vue";
+import AlarmLog from "@/components/Dashboard/IntelligentDetection/Charts/AlarmLog.vue";
+import AlertWarningModal from "@/components/AlertWindow/AlertWarningModal.vue";
+import NewChart from "@/components/Dashboard/IntelligentDetection/Charts/NewChart.vue";
+import FireDetectionModal from "../components/Dashboard/IntelligentDetection/FireDetectionModal.vue";
 import eventBus from "../cctveventbus"
 export default {
   name: "Home",
@@ -116,6 +117,9 @@ export default {
       fireWarningInfo : {detectionUrl: ''},
       currPos: {},
       currPosIdx: 0,
+      //새로추가
+      isConnected:false,
+      //
       infoList: [
         {
           color: "#5a8dee",
@@ -125,15 +129,15 @@ export default {
         {
           color: "#39da8a",
           status: "관심",
-          icon: "<i class='bi bi-emoji-smile-fill'></i>",
-        },
-        {
-          color: "#fdac41",
-          status: "주의",
-          icon: "<i class='bi bi-emoji-neutral-fill'></i>",
+          icon: "<i class='bi bi-emoji-frown-fill'></i>",
         },
         {
           color: "#fdce41",
+          status: "주의",
+          icon: "<i class='bi bi-emoji-frown-fill'></i>",
+        },
+        {
+          color: "#fdac41",
           status: "경고",
           icon: "<i class='bi bi-emoji-frown-fill'></i>",
         },
@@ -146,18 +150,29 @@ export default {
       fireDetectionPolling: null,
     };
   },
+
+  //새로추가
+   beforeCreate() {
+    console.log(this.$stompClient.connected);
+  },
+  //
   created() {
     this.getPosList(true);
     this.getPosSensor();
-    this.fireDetection();
+    // this.fireDetection();
+    //새로추가
+    this.connect();
+    //
   },
-  
+  //새로 수정
   beforeDestroy() {
-    this.disconnect();
-    clearInterval(this.timer);
-    clearInterval(this.fireDetectionPolling);
+      try {
+      this.disconnect();
+    } catch (error) { console.log("catch!!!")
+      this.disconnect();
+    }
   },
-
+  //
   methods: {
     async getPosList(isCreated=false) {
       try {
@@ -236,8 +251,16 @@ export default {
     }
   },
 
+  //새로추가
+ checkDataSocket() {
+    if (this.$stompClient.connected == false) {
+      this.$stompClient.connect({}, ()=>{});
+    }
+
+  },
+  //
     connect() {
-      const serverURL = "http://163.180.117.38:8281/ws";
+      const serverURL = "/ws";
       var socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
 
@@ -247,6 +270,7 @@ export default {
         // connetCallback
         (frame) => {
           console.log(frame)
+          console.log("프레임")
           // 이상 데이터 발생하는 경우
           this.stompClient.subscribe("/alert", (res) => {
             console.log("======================WARNING======================");
@@ -259,6 +283,7 @@ export default {
             this.alertWarning = true;
             this.getPosSensor(this.warningInfo.posId);
             this.$refs.addAlarmLog.getAlarmLog();
+
           });
         },
         // errorCallback
@@ -269,10 +294,18 @@ export default {
       );
       this.infSend();
     },
-
+    //새로수정
     infSend() {
-      setInterval(this.send, 2000);
+      this.timer = setInterval(this.check, 2000);
     },
+    //
+
+    //새로추가
+    check() {
+      //console.log(this.$stompClient.connected);
+      this.isConnected = this.$stompClient.connected;
+    },
+    //
 
     send() {
       for (var sensor of this.ssInfoList) {
@@ -315,10 +348,6 @@ export default {
       }, 1000);
     }
   },
-
-
-
-
   components: {
     "show-cctv": ShowCCTV,
     //"multi-chart": MultiChart,
@@ -351,7 +380,7 @@ export default {
 }
 
 .ssPos {
-  width: 80px;
+  width: 100px;
   height: 100%;
   line-height: 47px;
   padding: 0px 15px;
@@ -391,7 +420,7 @@ export default {
   background-size: cover;
   width: 100%;
   height: 100%;
-  background-image: url("../assets/background.png");
+  background-image: url("../assets/image/gwangju.png");
 }
 .box {
   background-color: #272e4890;

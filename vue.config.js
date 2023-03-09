@@ -12,13 +12,17 @@ module.exports = {
   devServer: {
     proxy: {
       '/api' : {
-        target: 'http://163.180.117.38:8281',
+        target: 'http://211.226.15.58:8281/',
         changeOrigin: true,
+      },
+      '/ws' : {
+        target: 'http://211.226.15.58:8281/',
+	      changeOrigin: true,
+        ws: true,
       }
     },
-    public: "server.inhun.io",
     disableHostCheck: true,
-    overlay: false,
+    overlay: true,
   },
 
   lintOnSave: undefined,

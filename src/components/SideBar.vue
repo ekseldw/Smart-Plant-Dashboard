@@ -4,17 +4,20 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
     />
-    <div>
-      <div
+    <div class= "view">
+    <div class = "scrollBlind scrollbar" style="overflow-y:scroll; height:95vh;">
+      
+      <div 
         class="home"
         @click="
           $router.push('/');
           menuOpen = 0;
         "
       >
-        <i class="bi bi-globe2"></i>
-        Smart M
+      <i class="bi bi-globe2"></i>
+        Smart Cafeteria
       </div>
+      
       <div class="menu">
         <div class="menu1">
           <i class="bi bi-display"></i>
@@ -23,20 +26,20 @@
         <div class="menu2" style="cursor: pointer">
           <p
             @click="
-              $router.push('/');
-              menuOpen = 0;
+              $router.push('/home');
+              menuOpen = 1;
             "
           >
-            <i v-if="menuOpen == 0" class="bi bi-chevron-right"></i> 지능형
+            <i v-if="menuOpen == 1" class="bi bi-chevron-right"></i> 지능형
             이상감지
           </p>
           <p
             @click="
               $router.push('cctv');
-              menuOpen = 1;
+              menuOpen = 2;
             "
           >
-            <i v-if="menuOpen == 1" class="bi bi-chevron-right"></i> CCTV
+            <i v-if="menuOpen == 2" class="bi bi-chevron-right"></i> CCTV
             영상인식
           </p>
         </div>
@@ -51,29 +54,29 @@
           <p
             @click="
               $router.push('/sensor-manage');
-              menuOpen = 2;
+              menuOpen = 3;
             "
           >
-            <i v-if="menuOpen == 2" class="bi bi-chevron-right"></i> 센서 관리
+            <i v-if="menuOpen == 3" class="bi bi-chevron-right"></i> 센서 관리
           </p>
 
           <p
             @click="
               $router.push('/sensorpos');
-              menuOpen = 3;
+              menuOpen = 4;
             "
           >
-            <i v-if="menuOpen == 3" class="bi bi-chevron-right"></i> 센서 위치
+            <i v-if="menuOpen == 4" class="bi bi-chevron-right"></i> 센서 위치
             등록
           </p>
 
           <p
             @click="
               $router.push('cctv-setting');
-              menuOpen = 4;
+              menuOpen = 5;
             "
           >
-            <i v-if="menuOpen == 4" class="bi bi-chevron-right"></i> CCTV 설정
+            <i v-if="menuOpen == 5" class="bi bi-chevron-right"></i> CCTV 설정
           </p>
         </div>
       </div>
@@ -85,36 +88,36 @@
         </div>
         <div class="menu2" style="cursor: pointer">
           <p @click="openEsopSimulation">
-            <i v-if="menuOpen == 11" class="bi bi-chevron-right"></i> e-SOP 수행
+            <i v-if="menuOpen == 6" class="bi bi-chevron-right"></i> e-SOP 수행
           </p>
           <p @click="openEsopEditor">
-            <i v-if="menuOpen == 5" class="bi bi-chevron-right"></i> e-SOP
+            <i v-if="menuOpen == 7" class="bi bi-chevron-right"></i> e-SOP
             에디터
           </p>
           <!-- SOP 수행 이력 메뉴 -->
           <p
             @click="
               $router.push('/esop-manager');
-              menuOpen = 6;
+              menuOpen = 8;
             "
           >
-            <i v-if="menuOpen == 6" class="bi bi-chevron-right"></i> 담당자 관리
+            <i v-if="menuOpen == 8" class="bi bi-chevron-right"></i> 담당자 관리
           </p>
           <p
             @click="
               $router.push('/msg-log');
-              menuOpen = 7;
+              menuOpen = 9;
             "
           >
-            <i v-if="menuOpen == 7" class="bi bi-chevron-right"></i> 문자메시지 기록
+            <i v-if="menuOpen == 9" class="bi bi-chevron-right"></i> 문자메시지 기록
           </p>
           <p
             @click="
               $router.push('/check-log');
-              menuOpen = 8;
+              menuOpen = 10;
             "
           >
-            <i v-if="menuOpen == 8" class="bi bi-chevron-right"></i> SOP 수행 이력
+            <i v-if="menuOpen == 10" class="bi bi-chevron-right"></i> SOP 수행 이력
           </p>
         </div>
       </div>
@@ -128,82 +131,107 @@
           <p
             @click="
               $router.push('/alertsettings');
-              menuOpen = 9;
+              menuOpen = 11;
             "
           >
-            <i v-if="menuOpen == 9" class="bi bi-chevron-right"></i> 이상 경고
+            <i v-if="menuOpen == 11" class="bi bi-chevron-right"></i> 이상 경고
             설정
           </p>
           <p
             @click="
               $router.push('/abnormal-detection-log');
-              menuOpen = 10;
+              menuOpen = 12;
             "
           >
-            <i v-if="menuOpen == 10" class="bi bi-chevron-right"></i> 이상 감지 이력
+            <i v-if="menuOpen == 12" class="bi bi-chevron-right"></i> 이상 감지 이력
           </p>
           <p
             @click="
               $router.push('/sensor-data-log');
-              menuOpen = 12;
+              menuOpen = 13;
             "
           >
-            <i v-if="menuOpen == 12" class="bi bi-chevron-right"></i> 센서 데이터 기록
+            <i v-if="menuOpen == 13" class="bi bi-chevron-right"></i> 센서 데이터 기록
+          </p>
+          <p
+            @click="
+              $router.push('/sensor-data-graph');
+              menuOpen = 14;
+            "
+          >
+            <i v-if="menuOpen == 14" class="bi bi-chevron-right"></i> 센서 데이터 그래프
+          </p>
+          <p
+            @click="openMLOps"
+          >
+            <i v-if="menuOpen == 15" class="bi bi-chevron-right"></i> MLOps Studio
           </p>
         </div>
       </div>
     </div>
-
-    <div class="user-info-wrapper">
-      <div v-if="logIn" class="user-info">
-        <div><i class="bi bi-person-circle"></i> {{ currUser.name }}</div>
-
-        <div @click="askToLogOut = true">
-          <i class="bi bi-box-arrow-right"></i>
-        </div>
-      </div>
-      <div v-else class="user-info">
+      <!--div class="user-info-wrapper">
+      <div v-if="!loggedIn" class="user-info">
         <div class="goto-login"
-        @click="$router.push('/login')"
+        @click="$router.push('/')"
         ><i class="bi bi-lock"></i> 로그인 해주세요</div>
       </div>
-    </div>
+      <div v-if="loggedIn" class="user-info">
+      <div @click="usermodal = true"><i class="bi bi-person-circle"></i> {{ currUser }}</div>
+        <div @click="askToLogOut = true">
+          <i class="bi bi-box-arrow-right"></i>
+          로그아웃
+        </div>
+      </div>
 
+    </div-->
+
+    </div>
+    <!--userModal
+      v-if="usermodal"
+      @close="usermodal = false"
+      :userinfo="userinfo">
+    </userModal>
     <AskToLogOut
       v-if="askToLogOut"
       @close="askToLogOut = false"
       @log-out="logOut()"
-    ></AskToLogOut>
+    ></AskToLogOut-->
   </div>
 </template>
 
 <script>
-import axios from "axios";
-import VueCookies from "vue-cookies";
-import AskToLogOut from "../views/AskToLogOut.vue";
+//import axios from "axios";
+//import VueCookies from "vue-cookies";
+//import userModal from "./userModal.vue"
+//import AskToLogOut from "../views/AskToLogOut.vue";
 import EventBus from "../eventbus";
+import { authComputed } from "../vuex/helpers.js";
 
 export default {
   name: "SideBar",
-
+  computed: {
+    ...authComputed
+  },
+  
   data() {
     return {
       menuOpen: 0,
-      currUser: {},
-      askToLogOut: false,
-      logIn: false,
+      
+      
     };
   },
   created() {
-    this.getUserInfo();
+    //this.getUserInfo();
   },
   mounted() {
     EventBus.$on("log-in-success", () => {
       this.getUserInfo();
+ 
     });
   },
   beforeDestroy() {
     EventBus.$off("log-in-success");
+    
   },
   methods: {
     openEsopSimulation() {
@@ -218,6 +246,11 @@ export default {
       // let routeData = this.$router.resolve({ path: "/esop-editor"});
       window.open(routeData.href);
     },
+
+    openMLOps(){
+      window.open("http://163.180.117.186:8081/");
+    },
+    /*
     async getUserInfo() {
       let token = VueCookies.get("token");
       if (token != null) {
@@ -239,16 +272,15 @@ export default {
         this.logIn = false;
       }
     },
+    */
 
     logOut() {
-      VueCookies.remove("token");
-      this.currUser = {};
-      this.logIn = false;
-      this.$router.push("/login");
+      this.$store.dispatch("logout");
     },
   },
   components: {
-    AskToLogOut,
+    //AskToLogOut,
+    //userModal,
   },
 };
 </script>
@@ -275,11 +307,11 @@ export default {
   cursor: pointer;
 }
 
-.side-bar {
+.view {
   order: 1;
   float: left;
   width: 240px;
-  height: 100%;
+  height: 100vh;
   background-color: #1a233a;
   color: #c8d9f8;
   text-align: left;
@@ -288,11 +320,15 @@ export default {
   overflow: hidden;
   box-shadow: 8px 13px 20px 5px rgb(9 21 42 / 66%);
 }
+.scrollBlind{
+  width:260px;
+  height: 100vh;
+  overflow-y:scroll;
+}
 
 .home {
   color: #517bcd;
-  padding: 1.2rem 1.5rem;
-  text-align: center;
+  padding: 1.5rem;
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;

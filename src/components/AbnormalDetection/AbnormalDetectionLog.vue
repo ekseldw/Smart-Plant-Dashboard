@@ -4,7 +4,7 @@
       href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css"
       rel="stylesheet"
     />
-    <div class="table-header">이상 감지 이력 |</div>
+    <div class="table-header">이상 감지 이력 </div>
 
     <div class="table-main" style="height: fit-content">
       <div>
@@ -28,20 +28,13 @@
                 </button>
                 <div class="dropdown-menu">
                   <a
-                    class="dropdown-item"
-                    @click="
-                      getAlarmLog();
-                      currPos = { posName: '모든 구역', posId: 0 };
-                    "
-                    >모든 구역</a
-                  >
-                  <a
                     v-for="pos in posList"
                     :key="pos.posId"
                     class="dropdown-item"
                     @click="
-                      getPosAlarmLog(pos.posId);
                       currPos = { posName: pos.posName, posId: pos.posId };
+                      getAlarmLog(0);
+                      
                     "
                   >
                     {{ pos.posName }}
@@ -63,36 +56,23 @@
                     class="dropdown-item"
                     @click="
                       currSsType = { ssTypeName: '모든 센서', ssTypeId: 0 };
+                      getAlarmLog(0);
                       filterTypePeriod();
                     "
                     >모든 센서</a
                   >
-                  <!-- 전체 구역인 경우 -->
-                  <div v-if= "currPos.posId===0">
+                  <div>
                     <a
-                      v-for="ssType in sensorList"
-                      :key="ssType.typeId"
+                      v-for="(list,i) in sensorList"
+                      :key="i"
                       class="dropdown-item"
                       @click="
-                        currSsType = { ssTypeName: ssType.typeName, ssTypeId: ssType.typeId };
-                        filterTypePeriod();
+                        currSsType = { ssTypeName: list.ssType.typeName, ssTypeId: list.ssType.typeId };
+                        getTypeAlarmLog(0);
+                        filterTypePeriod();  
                       "
                     >
-                      {{ ssType.typeName }}
-                    </a>
-                  </div>
-                  <!-- 전체 구역이 아닌 경우 -->
-                  <div v-else>
-                    <a
-                      v-for="ssType in sensorList"
-                      :key="ssType.ssType.typeId"
-                      class="dropdown-item"
-                      @click="
-                        currSsType = { ssTypeName: ssType.ssType.typeName, ssTypeId: ssType.ssType.typeId };
-                        filterTypePeriod();
-                      "
-                    >
-                      {{ ssType.ssType.typeName }}
+                      {{ list.ssType.typeName }}
                     </a>
                   </div>
                 </div>
@@ -168,18 +148,20 @@
               
               </div>
 
-              <div v-if="alarmLogList.length===0" class="empty-data">
+              <div v-if="posAlarmLogList.length==0" class="empty-data">
                 <div>데이터가 존재하지 않습니다.</div>
                 <div class="empty-icon"><i class="bi bi-x-circle"></i></div>
               </div>
-              <div v-else class="table-wrapper scrollbar">
+              <!-- <div v-else class="table-wrapper scrollbar"> -->
+              <div v-else class="scrollbar" style="display:flex; overflow-y:auto; height:60vh;">
                 <table
                   class="table table-bordered table-hover"
-                  style="width: 95%"
+                  style="width: 95%; height:70px;"
                 >
-                  <thead class="alarm-log-header">
+                  <!-- <thead class="alarm-log-header"> -->
+                  <thead>
                     <tr>
-                      <th>닐짜</th>
+                      <th>날짜</th>
                       <th>시간</th>
                       <th>위치</th>
                       <th>종류</th>
@@ -187,29 +169,59 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(alarmLog, i) in alarmLogList" in :key="i">
-                      <th>
-                        {{ alarmLog.createdAt.split('T')[0].substring(5) }}
-                      </th>
-                      <th>
-                        {{ alarmLog.createdAt.split('T')[1].substring(0, 5) }}
-                      </th>
-                      <th>{{ alarmLog.posName }}</th>
-                      <th>{{ alarmLog.typeName }}</th>
-                      <th
+                    <tr v-for="(alarmLog, i) in posAlarmLogList" in :key="i">
+                      <td>
+                        {{ alarmLog.createdAt.split('T')[0].substring() }}
+                        <!-- substring(5) -->
+                      </td>
+                      <td>
+                        {{ alarmLog.createdAt.split('T')[1].substring(0, 8) }}
+                        <!-- substring(0, 5) -->
+                      </td>
+                      <td>{{ alarmLog.posName }}</td>
+                      <td>{{ alarmLog.typeName }}</td>
+                      <td
                         :style="{ color: statusList[alarmLog.sensorState][1] }"
                       >
                         {{ statusList[alarmLog.sensorState][0] }}
-                      </th>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
+             
             </div>
           </div>
+           
         </div>
+      
       </div>
+    
     </div>
+       <nav aria-label="Page navigation example" style="float: right">
+          <ul class="pagination">
+             <li v-if="button==0" class="page-item disabled">
+              <a class="page-link previous">Previous</a>
+            </li>
+            <li v-else class="page-item">
+              <a class="page-link" @click="button += -1">Previous</a>
+            </li>
+            <li
+              v-for="i in pageList[button]"
+              :key="i"
+              @click="getPage(i - 1)"
+              class="page-item"
+            >
+              <span class="page-link" autocomplete="off">{{ i }}</span>
+            </li>
+            <li v-if="button==(LastPage-1)" class="page-item disabled">
+              <a class="page-link">Next</a>
+            </li>
+            <li v-else class="page-item">
+              <a class="page-link" @click="button +=1">Next</a>
+            </li>
+          </ul>
+        </nav>
   </div>
 </template>
 
@@ -247,14 +259,93 @@ export default {
         ["경고", "#fdac41"],
         ["심각", "#ff5b5c"],
       ],
+      totalPages: [],
+      pageList: [],
+      button :0,
+      LastPage:0,
+      page:0,
     };
   },
   created() {
-    this.getSensorPos();
+    this.getPosition();
     this.setPeriod();
-    this.getAlarmLog();
+    
   },
   methods: {
+
+    async getPosition() {
+      try {
+        const res = await axios.get(
+          "/api/sensor-pos"
+        );
+        this.posList = res.data.data.content;
+        this.currPos.posName = res.data.data.content[0].posName;
+        this.currPos.posId = res.data.data.content[0].posId;
+        this.getSensor();
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    async getSensor() { // 구역별 존재하는 센서
+      try {
+        const res = await axios.get(
+          "/api/sensor-manage?posId=" + this.currPos.posId
+        );
+        this.sensorList=[];
+        this.sensorList = res.data.data.content;
+        console.log(this.sensorList)
+        this.getAlarmLog(0);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async getAlarmLog(page=0) {
+      try {
+        const res = await axios.get(
+          "/api/abnormal-detection?page="+page+"&size=30&sort=createdAt,DESC&posId="+this.currPos.posId
+        );     
+        this.posAlarmLogList=[];
+        this.posAlarmLogList = res.data.data.content;
+        this.totalPages=[];
+        this.totalPages = res.data.data.totalPages;
+        this.setPage();
+        this.currSsType={ ssTypeName: "센서 종류 선택", ssTypeId: 0 },
+
+        this.filterTypePeriod();
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async getTypeAlarmLog(page=0){
+      try{
+        const res = await axios.get(
+          "/api/abnormal-detection/v2?page="+page+"&size=30&sort=createdAt,DESC&posId="+this.currPos.posId+"&typeId="+this.currSsType.ssTypeId
+        )
+        this.posAlarmLogList=[];
+        this.posAlarmLogList = res.data.data.content;
+        console.log(this.posAlarmLogList)
+        this.totalPages=[];
+        this.totalPages = res.data.data.totalPages;
+        
+        this.setPage();
+      }catch (err) {
+        console.log(err);
+      }
+    },
+    async getPage(page){
+      console.log(this.currSsType.ssTypeId,"sstype")
+      console.log(this.currPos.posId,"posId")
+      console.log(page,"page")
+      if(this.currSsType.ssTypeId==0){
+        this.getAlarmLog(page)
+      }
+      else{
+        this.getTypeAlarmLog(page)
+      }
+
+    },
+
     getYYYYMMDD(d) { // date를 string으로
       return new Date(d.getTime()-(d.getTimezoneOffset()*60*1000)).toISOString().split('T')[0];
     },
@@ -301,76 +392,24 @@ export default {
       }
     },
 
-    async getAllSensor() { // 존재하는 모든 센서 종류
-      try {
-        const res = await axios.get(
-          "/api/sensor-type"
-        );
-        this.sensorList = res.data.data.content;
-        console.log(this.sensorList);
-      } catch (err) {
-        console.log(err)
+    
+       async setPage(){
+      var page = [];
+      var result = [];
+      for(var i=0; i< this.totalPages; i++){
+        page.push(i+1)
       }
+      for(var n=0; n<this.totalPages; n+= 5){
+        result.push(page.slice(n,n+5))
+      }
+      this.pageList = result
+      this.LastPage =result.length
+    
     },
 
-    async getPosSensor() { // 구역별 존재하는 센서
-      try {
-        const res = await axios.get(
-          "/api/sensor-manage?posId=" + this.currPos.posId
-        );
-        this.sensorList = res.data.data.content;
-      } catch (err) {
-        console.log(err);
-      }
-    },
-
-    async getSensorPos() {
-      try {
-        const res = await axios.get(
-          "/api/sensor-pos"
-        );
-        this.posList = res.data.data.content;
-      } catch (err) {
-        console.log(err);
-      }
-    },
-
-    async getAlarmLog() {
-      try {
-        const res = await axios.get(
-          "/api/abnormal-detection"
-        );
-        this.getAllSensor();
-        this.posAlarmLogList = res.data.data.content;
-
-        // 센서 종류 필터링 초기화
-        this.currSsType = { ssTypeName: "모든 센서", ssTypeId: 0 }
-
-        this.filterTypePeriod();
-      } catch (err) {
-        console.log(err);
-      }
-    },
-
-    async getPosAlarmLog(posId) {
-      try {
-        const res = await axios.get(
-          "/api/abnormal-detection?posId=" + posId
-        );
-        this.getPosSensor();
-        this.posAlarmLogList = res.data.data.content;
-
-        // 센서 종류 필터링 초기화
-        this.currSsType = { ssTypeName: "모든 센서", ssTypeId: 0 }
-
-        // 센서 종류 및 기간 필터링
-        this.filterTypePeriod();
-      } catch (err) {
-        console.log(err);
-      }
-    },
 
     filterTypePeriod() { // 센서 타입, 기간 필터링 기능
+    
       var currPeriodId = this.currPeriod.periodId;
       var currTypeId = this.currSsType.ssTypeId;
 
@@ -467,4 +506,20 @@ export default {
   background-color: #00000020;
 }
 
+.pagination{
+  color:#5a8dee;
+  border:#5a8dee 1px solid;
+}
+.pagination{
+  color:#5a8dee;
+  border:#5a8dee 1px solid;
+}
+.previous{
+  color:#5a8dee;
+}
+
+.previous-disabled{
+  color:#5a8dee;
+  background: #7c8ba6;
+}
 </style>

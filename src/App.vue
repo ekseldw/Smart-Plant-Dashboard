@@ -16,6 +16,7 @@ export default {
   name: "App",
   components: {
     SideBar: SideBar,
+    
   },
   methods: {},
 };
@@ -58,9 +59,15 @@ body {
   border-radius: 9px;
   padding-bottom: 30px;
 }
+
 .table-main__header {
   padding: 20px;
   font-size: 20px;
+  width: 500px;
+}
+
+.table-main td {
+  font-size: 15px;
 }
 
 .contents {

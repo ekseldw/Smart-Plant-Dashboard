@@ -13,7 +13,7 @@
         "
       >
         <i class="bi bi-globe2"></i>
-        Smart M
+        Smart Ma
       </div>
       <div class="menu">
         <div class="menu1">
@@ -235,7 +235,7 @@ export default {
       VueCookies.remove("token");
       this.currUser = {};
       this.logIn = false;
-      this.$router.push("/login");
+      this.$router.push("/");
     },
   },
   components: {

@@ -35,7 +35,7 @@
                   <thead>
                     <tr>
                       <th>CCTV 위치</th>
-                      <th>CCTV RTSP URL</th>
+                      <!---th>CCTV RTSP URL</th-->
 
                       <th style="width: 200px">ACTION</th>
                     </tr>
@@ -43,7 +43,7 @@
                   <tbody>
                     <tr v-for="cctv in cctvList" :key="cctv.cctvId">
                       <td>{{ cctv.posName }}</td>
-                      <td>{{ cctv.streamURL }}</td>
+                      <!----td>{{ cctv.streamURL }}</td-->
                       <td
                         style="
                           padding-top: 2px;

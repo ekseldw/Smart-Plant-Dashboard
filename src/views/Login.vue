@@ -1,6 +1,7 @@
 <template>
 <div>
     <div class="content-body">
+        
         <form class="login-wrapper">
             <div class="login-text">LOGIN</div>
             <div class="input-wrapper">
@@ -8,6 +9,7 @@
                 <input type="text" class="form-control" placeholder="id" aria-label="id" aria-describedby="basic-addon1"
                 style="width: 100%;"
                 v-model="currUser.email"
+                required
                 >
             </div>
             <div class="input-wrapper">
@@ -15,6 +17,7 @@
                 <input type="password" class="form-control" placeholder="password" aria-label="password" aria-describedby="basic-addon1"
                 style="width: 100%;"
                 v-model="currUser.password"
+                required
                 >
             </div>
             <div class="input-wrapper">
@@ -39,8 +42,9 @@
         </form>
         <div class="image-wrapper">
         </div>
+        
     </div>
-
+    
     <SignUp v-if="showSignUpModal"
     @close="showSignUpModal=false"
     @sign-up="addUserInfo"
@@ -61,8 +65,8 @@
 <script>
 import axios from "axios";
 import VueCookies from 'vue-cookies';
-import AlertSuccess from "./alert-success.vue";
-import AlertFail from "./alert-fail.vue";
+import AlertSuccess from "@/components/AlertWindow/alert-success.vue";
+import AlertFail from "@/components/AlertWindow/alert-fail.vue";
 import SignUp from "./SignUp.vue";
 import EventBus from "../eventbus";
 
@@ -80,6 +84,7 @@ export default {
             alertFail: false,
             action: "",
             currUser: { email: "", password: "" },
+            
         }
     },
     methods: {
@@ -119,7 +124,9 @@ export default {
                 console.log('로그인 성공')
                 VueCookies.set("token", this.token, "1h");
                 EventBus.$emit('log-in-success');
-                this.$router.push('/')
+                this.$router.push('/');
+                
+
             } catch (err) {
                 this.alertFail = true;
                 console.log(err);
