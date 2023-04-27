@@ -27,8 +27,8 @@
                   <a
                     class="dropdown-item"
                     @click="getSituationLog();
-                    currSituation={ situationName:'전체', situationId:0 }">
-                  전체
+                    currSituation={ situationName:'전체 상황', situationId:0 }">
+                  전체 상황
                   </a>
                   <a
                     v-for="situation in situationList"
@@ -132,11 +132,13 @@ export default{
   name: "CheckLog",
   data() {
     return {
-      currSituation: { situationName: "상황", situationId:0 },
+      // currSituation: { situationName: "상황", situationId:0 },
+      currSituation: { situationName: "전체 상황", situationId:0 },
       situationList: [],
       situationLogList: [],
-      levelList: [ "전체","관심", "주의", "경고", "심각" ],
-      currLevel: { levelName:"단계", levelId:0 },
+      levelList: [ "전체 단계","관심", "주의", "경고", "심각" ],
+      // currLevel: { levelName:"단계", levelId:0 },
+      currLevel: { levelName:"전체 단계", levelId:0 },
       checkLogList:[],
       totalPages: [],
       pageList: [],
@@ -157,7 +159,7 @@ export default{
           "/api/situation"
         );
         this.situationList = res.data.data;
-      }catch (err){
+      } catch (err){
         console.log(err);
       }
     },
@@ -174,8 +176,7 @@ export default{
           this.checkLogList =[];
           for(var lst of templist){
             this.checkLogList.push(lst);
-            this.setPage();
-            
+            this.setPage();    
           }
           //this.checkLogList = templist;
           
@@ -185,33 +186,27 @@ export default{
           for(var list of templist){
             if(list.situation == this.currSituation.situationName){
               this.checkLogList.unshift(list);
-              
             }
           }
           this.filterPage();
-          
         }
         else if (this.currSituation.situationId == 0 && this.currLevel.levelId !==0){
-          
           this.checkLogList =[];
           for(var slist of templist){
-            if(slist.level == this.currLevel.levelId){
-               this.checkLogList.unshift(slist)
+            if(slist.level == this.currLevel.levelId) {
+               this.checkLogList.unshift(slist);
             }
-             
           }
         }
         else if (this.currSituation.situationId !== 0 && this.currLevel.levelId !==0){
           this.checkLogList =[];
           for(var tlist of templist){
             if(tlist.level == this.currLevel.levelId && tlist.situation ==this.currSituation.situationName){
-               this.checkLogList.unshift(tlist)
+               this.checkLogList.unshift(tlist);
             }
-             
           }
         }
-        
-      }catch (err){
+      } catch (err) {
         console.log(err)
       }
     },
@@ -225,13 +220,12 @@ export default{
         result.push(page.slice(n,n+5))
       }
       this.pageList = result
-      this.LastPage =result.length
+      this.LastPage = result.length
     
     },
     async filterPage(){
-      var pagenum = this.checkLogList.length/30
-      alert(pagenum)
-
+      // var pagenum = this.checkLogList.length/30
+      // alert(pagenum)
     }
   }
 };

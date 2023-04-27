@@ -230,7 +230,8 @@ export default {
   data() {
     return {
       currPos: { posName: "전체", posId: 0 },
-      currSsType: { ssTypeName: "센서 종류 선택", ssTypeId: 0 , ssId:0 },
+      // currSsType: { ssTypeName: "센서 종류 선택", ssTypeId: 0 , ssId:0 },
+      currSsType: { ssTypeName: "모든 센서", ssTypeId: 0, ssId: 0 },
       currPeriod: { periodId: 0, periodName: "기간 선택", start: new Date(), end: new Date() },
       posList: [],
       sensorList: [],

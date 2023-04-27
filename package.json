@@ -4,7 +4,7 @@
   "private": true,
   "description": null,
   "scripts": {
-    "serve": "vue-cli-service serve --host 192.168.219.10 --port 80 --public http://211.226.15.58:8280",
+    "serve": "vue-cli-service serve --host 192.168.0.39 --port 80 --public http://115.90.76.67:8280",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },

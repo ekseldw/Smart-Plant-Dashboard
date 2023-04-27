@@ -27,9 +27,8 @@
 
   <div class="chart-wrapper">
     <div
-      style="display: flex; flex-direction: column; justify-content: space-between; height: calc(100%-50px);"
+      style="display: flex; flex-direction: column; justify-content: flex-end; height: calc(100%-50px);"
     >
-      <show-cctv></show-cctv>
       <alarm-log
         ref="addAlarmLog"
       >
@@ -92,7 +91,7 @@
 import axios from "axios";
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
-import ShowCCTV from "@/components/Dashboard/IntelligentDetection/Charts/show-cctv.vue";
+//import ShowCCTV from "@/components/Dashboard/IntelligentDetection/Charts/show-cctv.vue";
 //import MultiChart from "@/components/Charts/multi-chart.vue";
 import GasChart from "@/components/Dashboard/IntelligentDetection/Charts/gas-chart.vue";
 import DustChart from "@/components/Dashboard/IntelligentDetection/Charts/dust-chart.vue";
@@ -114,7 +113,7 @@ export default {
       warningInfo: {},
       alertWarning: false,
       fireWarning : false,
-      fireWarningInfo : {detectionUrl: ''},
+      fireWarningInfo : {detectionUrl: '', posName: ''},
       currPos: {},
       currPosIdx: 0,
       //새로추가
@@ -159,7 +158,7 @@ export default {
   created() {
     this.getPosList(true);
     this.getPosSensor();
-    // this.fireDetection();
+    this.fireDetection();
     //새로추가
     this.connect();
     //
@@ -329,7 +328,7 @@ export default {
     },
     fireDetection(){
       this.fireDetectionPolling = setInterval(() => {
-        const url = "http://163.180.117.40:3000/api/fireDetection/"
+        const url = "http://115.90.76.67:3000/api/fireDetection/"
         fetch(url).then(res => {
           return res.json();
         }).then(json => {
@@ -349,7 +348,7 @@ export default {
     }
   },
   components: {
-    "show-cctv": ShowCCTV,
+    //"show-cctv": ShowCCTV,
     //"multi-chart": MultiChart,
     "gas-chart": GasChart,
     "dust-chart": DustChart,

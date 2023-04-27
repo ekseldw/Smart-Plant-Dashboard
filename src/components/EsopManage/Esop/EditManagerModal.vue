@@ -4,7 +4,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">
-            e-SOP 담당자 신규 등록
+            e-SOP 담당자 수정
           </h5>
           <button
             type="button"
@@ -26,7 +26,7 @@
                     <label for="sensor_posId">담당 위치 이름</label>
                     <div class="main-input">
                       <select
-                        v-model="newManager.posId"
+                        v-model="newManager.sensorPosId"
                         name="sensor_posId"
                         class="form-control"
                         id="ss_type_select"
@@ -197,7 +197,7 @@
 <script>
 export default {
     created() {
-        this.newManager.posId = this.currManager.ssPos.posId;
+        this.newManager.posId = this.currManager.sensorPosId;
         this.newManager.name = this.currManager.name;
         this.newManager.phone = this.currManager.phone;
         this.newManager.id = this.currManager.id;

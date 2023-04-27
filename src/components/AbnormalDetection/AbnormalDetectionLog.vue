@@ -310,7 +310,8 @@ export default {
         this.totalPages=[];
         this.totalPages = res.data.data.totalPages;
         this.setPage();
-        this.currSsType={ ssTypeName: "센서 종류 선택", ssTypeId: 0 },
+        // this.currSsType={ ssTypeName: "센서 종류 선택", ssTypeId: 0 },
+        this.currSsType={ ssTypeName: "모든 센서", ssTypeId: 0 },
 
         this.filterTypePeriod();
       } catch (err) {

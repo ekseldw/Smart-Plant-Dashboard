@@ -28,24 +28,10 @@
 </template>
 
 <script>
-import JSMpeg from "jsmpeg";
+// import JSMpeg from "jsmpeg";
 export default {
   name: "FullScreenModal",
-  props: ["childCanvasId", "childWebsocketURL", "posName"],
-
-  /*
-  props: {
-    childCanvasId: {
-      type : String,
-      required : true
-    },
-    childWebsocketURL : {
-      type : String,
-      required: true
-    }
-  },
-
-   */
+  props: ["childCanvasId", "childWebsocketURL", "posName"],  
   data() {
     return {};
   },
@@ -59,9 +45,27 @@ export default {
 
   methods: {
     webSocketStreaming: function () {
-      this.canvasView = document.getElementById(this.childCanvasId);
+      console.log(this.childWebsocketURL);
+      console.log(this.childCanvasId);
+      console.log(this.posName);
+
       this.url2 = new WebSocket(this.childWebsocketURL);
-      new JSMpeg(this.url2, { canvas: this.canvasView });
+      this.url2.addEventListener("open", ()=>{
+        console.log("send connect message socket : "+String(11));
+        this.url2.send("client number of connection : "+String(11));
+      });
+      var msg2 = document.getElementById(this.childCanvasId);
+      let listen = this.url2;
+      listen.addEventListener('message', (event)=>{
+        let ctx2 = msg2.getContext("2d");
+        let image = new Image();
+        image.src = window.URL.createObjectURL(event.data);
+        image.addEventListener("load", (e) =>{
+          console.log(e);
+          ctx2.drawImage(image, 0, 0, msg2.width, msg2.height);
+          window.URL.revokeObjectURL(image.src);
+        });
+      });
     },
     disconnect2: function () {
       this.url2.close(1000);

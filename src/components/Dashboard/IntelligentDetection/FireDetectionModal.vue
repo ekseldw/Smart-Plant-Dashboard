@@ -3,12 +3,13 @@
     <!--<div class="modal-dialog">-->
       <div class="cctv-modal-content">
         <div class="cctv-modal-header">
+          {{ this.fireWarningInfo.posName }}
           <button
               type="button"
               class="btn btn-secondary"
               aria-label="Close"
               v-on:click=" $emit('close-fire-detection-modal');"
-          ></button>
+          >close</button>
           <div class="modal-body">
             <canvas id="fire-detection-modal" width=640 height=320></canvas>
           </div>

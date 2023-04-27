@@ -12,11 +12,11 @@ module.exports = {
   devServer: {
     proxy: {
       '/api' : {
-        target: 'http://211.226.15.58:8281/',
+        target: 'http://115.90.76.67:8281/',
         changeOrigin: true,
       },
       '/ws' : {
-        target: 'http://211.226.15.58:8281/',
+        target: 'http://115.90.76.67:8281/',
 	      changeOrigin: true,
         ws: true,
       }

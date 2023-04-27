@@ -104,7 +104,8 @@ export default {
         ssIdList:[],
         sensorRange: [],
         rangeList: [],
-        currPeriod: { periodId: 0, periodName: "기간 선택", start: new Date(), end: new Date() },
+        // currPeriod: { periodId: 0, periodName: "기간 선택", start: new Date(), end: new Date() },
+        currPeriod: { periodId: 0, periodName: "오늘", start: new Date(), end: new Date() },
         startDate: "", 
         endDate: "",
         periodList: [
@@ -174,7 +175,7 @@ export default {
         case 6:
           start="2000-01-01";
           end ="2300-12-31";
-          break
+          break;
         }
         period.start = new Date(start);
         period.end = new Date(end);

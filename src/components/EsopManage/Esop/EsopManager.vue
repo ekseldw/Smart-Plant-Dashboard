@@ -177,6 +177,7 @@ export default {
           "/api/sensor-pos"
         );
         this.posList = res.data.data.content;
+        console.log(this.posList);
         
       } catch(err) {
         console.log(err);
@@ -216,7 +217,7 @@ export default {
             level: manager.level,
             name: manager.name,
             phone: manager.phone,
-            posId: manager.ssPos.posId,
+            posId: manager.posId,
           }
         );
         this.reloadManager();
